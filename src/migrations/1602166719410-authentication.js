@@ -9,6 +9,16 @@ module.exports.up = async function (next) {
     email text UNIQUE,
     password text
   );
+  CREATE TABLE IF NOT EXISTS jobs (
+    id uuid PRIMARY KEY,
+    title text,
+    salaryRange text,
+    description text,
+    createAt timestamp DEFAULT CURRENT_TIMESTAMP,
+    tags text[],
+    company text,
+    logoURL text DEFAULT 'https://unsplash.com/photos/g2E2NQ5SWSU'
+  );
   CREATE TABLE IF NOT EXISTS sessions (
     id uuid PRIMARY KEY,
     user_id uuid REFERENCES users (id) ON DELETE CASCADE
