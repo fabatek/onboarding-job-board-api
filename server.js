@@ -31,5 +31,8 @@ module.exports = {
   },
   stop() {
     server.close();
+  },
+  app() {
+    return app;
   }
 };

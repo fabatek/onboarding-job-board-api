@@ -5,6 +5,7 @@
   "description": "Job board API for onboarding project",
   "scripts": {
     "test": "xo && ./node_modules/mocha/bin/mocha",
+    "test:watch": "xo && ./node_modules/mocha/bin/mocha --watch",
     "lint": "xo",
     "format": "xo --fix",
     "start": "node ./bin/start.js",

@@ -41,7 +41,8 @@ router.post('/', async (request, response) => {
     }
 
     return response.status(201).json({
-      message: 'Create the job successful!'
+      message: 'Create the job successful!',
+      job
     });
   } catch (error) {
     console.error(

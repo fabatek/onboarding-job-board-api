@@ -11,7 +11,7 @@ module.exports = {
         VALUES (${uuidv4()}, ${para.title}, ${para.salaryrange}, ${
         para.description
       }, current_date, ${para.tags}, ${para.company}, ${para.logoURL})
-        RETURNING id, title;
+        RETURNING id, title, tags;
       `);
       return rows[0];
     } catch (error) {
