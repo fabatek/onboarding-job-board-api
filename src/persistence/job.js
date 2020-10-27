@@ -25,40 +25,40 @@ module.exports = {
     `);
     return rows[0];
   },
-  async update(isJobExist, jobParameters) {
+  async update(job, jobParameters) {
     try {
-      let newTitle = jobParameters.title;
-      let newSalaryRange = jobParameters.salaryRange;
-      let newDescription = jobParameters.description;
+      let newTitle = jobParameters.title.trim();
+      let newSalaryRange = jobParameters.salaryRange.trim();
+      let newDescription = jobParameters.description.trim();
       let newTags = jobParameters.tags;
-      let newCompany = jobParameters.company;
-      let newLogoURL = jobParameters.logoURL;
-      if (newTitle.trim() === '') {
-        newTitle = isJobExist.title;
+      let newCompany = jobParameters.company.trim();
+      let newLogoURL = jobParameters.logoURL.trim();
+      if (newTitle === '') {
+        newTitle = job.title;
       }
 
       if (newSalaryRange.trim() === '') {
-        newSalaryRange = isJobExist.salaryRange;
+        newSalaryRange = job.salaryRange;
       }
 
       if (newDescription.trim() === '') {
-        newDescription = isJobExist.description;
+        newDescription = job.description;
       }
 
       if (newTags.length === 0) {
-        newTags = isJobExist.tags;
+        newTags = job.tags;
       }
 
       if (newCompany.trim() === '') {
-        newCompany = isJobExist.company;
+        newCompany = job.company;
       }
 
       if (newLogoURL.trim() === '') {
-        newLogoURL = isJobExist.logoURL;
+        newLogoURL = job.logoURL;
       }
 
       const {rows} = await db.query(sql`
-        UPDATE jobs SET title = ${newTitle}, salary_range = ${newSalaryRange}, description = ${newDescription}, tags = ${newTags}, company = ${newCompany}, logo_url = ${newLogoURL} WHERE id = ${isJobExist.id}
+        UPDATE jobs SET title = ${newTitle}, salary_range = ${newSalaryRange}, description = ${newDescription}, tags = ${newTags}, company = ${newCompany}, logo_url = ${newLogoURL} WHERE id = ${job.id}
           RETURNING id, title, salary_range, description, create_at, tags, company, logo_url ;
         `);
       return rows[0];

@@ -53,7 +53,7 @@ describe('/POST Post a new job', () => {
     });
   });
 
-  describe('/PUT Update the job has just been create', () => {
+  describe('/PUT Update the job', () => {
     it('PUT /api/jobs', (done) => {
       const jobParameters = {
         id,

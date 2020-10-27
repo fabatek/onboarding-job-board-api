@@ -55,15 +55,15 @@ router.put('/', async (request, response) => {
   try {
     const {id} = request.body;
     // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-    const isJobExist = await Job.find(id);
-    if (!isJobExist) {
+    let job = await Job.find(id);
+    if (!job) {
       return response
         .status(400)
         .json({message: 'There is no job with this id!'});
     }
 
     const jobParameters = request.body;
-    const job = await Job.update(isJobExist, jobParameters);
+    job = await Job.update(job, jobParameters);
     if (!job) {
       return response.status(400).json({message: 'Update job failed!'});
     }
