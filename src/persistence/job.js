@@ -8,13 +8,13 @@ module.exports = {
       const {rows} = await db.query(sql`
       INSERT INTO jobs
         VALUES (${uuidv4()}, ${jobParameters.title}, ${
-        jobParameters.salaryRange
+          jobParameters.salaryRange
       }, ${jobParameters.description}, current_date, ${jobParameters.tags}, ${
-        jobParameters.company
+          jobParameters.company
       }, ${jobParameters.logoURL})
-        RETURNING id, title, salary_range, description, create_at, tags, company, logo_url ;
+        RETURNING *;
       `);
-      return rows[0];
+      return rows;
     } catch (error) {
       throw error;
     }
