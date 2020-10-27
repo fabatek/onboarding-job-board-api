@@ -16,10 +16,6 @@ module.exports = {
       `);
       return rows[0];
     } catch (error) {
-      if (error.constraint === 'users_email_key') {
-        return null;
-      }
-
       throw error;
     }
   },
