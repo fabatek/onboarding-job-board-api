@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "description": "Job board API for onboarding project",
   "scripts": {
-    "test": "xo",
+    "test": "xo && ./node_modules/mocha/bin/mocha",
+    "test:watch": "xo && ./node_modules/mocha/bin/mocha --watch",
     "lint": "xo",
     "format": "xo --fix",
     "start": "node ./bin/start.js",
@@ -32,12 +33,18 @@
     "uuid": "^8.3.1"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.0",
     "nodemon": "^2.0.4",
     "xo": "^0.33.1"
   },
   "xo": {
     "prettier": true,
-    "space": true
+    "space": true,
+    "envs": [
+      "mocha"
+    ]
   },
   "repository": {
     "type": "git",
