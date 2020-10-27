@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const Job = require('../persistence/job');
-
+const uuid = require('uuid');
 const router = new Router();
 
 router.post('/', async (request, response) => {
@@ -54,6 +54,12 @@ router.post('/', async (request, response) => {
 router.put('/', async (request, response) => {
   try {
     const {id} = request.body;
+    if (!uuid.validate(id)) {
+      return response
+        .status(400)
+        .json({message: 'The ID is not match format!'});
+    }
+
     // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
     let job = await Job.find(id);
     if (!job) {

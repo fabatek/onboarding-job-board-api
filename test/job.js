@@ -5,6 +5,7 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const {app} = require('../server');
+const {v4: uuidv4} = require('uuid');
 
 chai.use(chaiHttp);
 chai.should();
@@ -54,7 +55,7 @@ describe('/POST Post a new job', () => {
   });
 
   describe('/PUT Update the job', () => {
-    it('PUT /api/jobs', (done) => {
+    it('Update the job with properly parameters', (done) => {
       const jobParameters = {
         id,
         title: 'ChangeTitleToThisLine',
@@ -75,6 +76,54 @@ describe('/POST Post a new job', () => {
           response.body.should.have
             .property('message')
             .eql('Update the job successful!');
+          done();
+        });
+    });
+    it('Update the job with non-UUID ID', (done) => {
+      const jobParameters = {
+        id: 'example',
+        title: 'ChangeTitleToThisLine',
+        salaryRange: '$450-$700',
+        description: 'Work with customers and dev team',
+        tags: ['English', 'Communicate', 'Technical knowledge'],
+        company: 'Faba',
+        logoURL:
+          'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80'
+      };
+      chai
+        .request(app())
+        .put('/api/jobs')
+        .set('Authorization', 'Bearer ' + accessToken)
+        .send(jobParameters)
+        .end((err, response) => {
+          response.should.have.status(400);
+          response.body.should.have
+            .property('message')
+            .eql('The ID is not match format!');
+          done();
+        });
+    });
+    it('Update the job with non-exist ID', (done) => {
+      const jobParameters = {
+        id: uuidv4(),
+        title: 'ChangeTitleToThisLine',
+        salaryRange: '$450-$700',
+        description: 'Work with customers and dev team',
+        tags: ['English', 'Communicate', 'Technical knowledge'],
+        company: 'Faba',
+        logoURL:
+          'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80'
+      };
+      chai
+        .request(app())
+        .put('/api/jobs')
+        .set('Authorization', 'Bearer ' + accessToken)
+        .send(jobParameters)
+        .end((err, response) => {
+          response.should.have.status(400);
+          response.body.should.have
+            .property('message')
+            .eql('There is no job with this id!');
           done();
         });
     });

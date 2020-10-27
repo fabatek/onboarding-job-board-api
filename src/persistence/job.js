@@ -4,20 +4,16 @@ const db = require('./db');
 
 module.exports = {
   async create(jobParameters) {
-    try {
-      const {rows} = await db.query(sql`
+    const {rows} = await db.query(sql`
       INSERT INTO jobs
         VALUES (${uuidv4()}, ${jobParameters.title}, ${
-        jobParameters.salaryRange
-      }, ${jobParameters.description}, current_date, ${jobParameters.tags}, ${
-        jobParameters.company
-      }, ${jobParameters.logoURL})
+      jobParameters.salaryRange
+    }, ${jobParameters.description}, current_date, ${jobParameters.tags}, ${
+      jobParameters.company
+    }, ${jobParameters.logoURL})
         RETURNING *;
       `);
-      return rows[0];
-    } catch (error) {
-      throw error;
-    }
+    return rows[0];
   },
   async find(id) {
     const {rows} = await db.query(sql`
@@ -26,44 +22,33 @@ module.exports = {
     return rows[0];
   },
   async update(job, jobParameters) {
-    try {
-      let newTitle = jobParameters.title.trim();
-      let newSalaryRange = jobParameters.salaryRange.trim();
-      let newDescription = jobParameters.description.trim();
-      let newTags = jobParameters.tags;
-      let newCompany = jobParameters.company.trim();
-      let newLogoURL = jobParameters.logoURL.trim();
-      if (newTitle === '') {
-        newTitle = job.title;
-      }
+    const newTitle =
+      jobParameters.title.trim() === ''
+        ? job.title
+        : jobParameters.title.trim();
+    const newSalaryRange =
+      jobParameters.salaryRange.trim() === ''
+        ? job.salary_range
+        : jobParameters.salaryRange.trim();
+    const newDescription =
+      jobParameters.description.trim() === ''
+        ? job.description
+        : jobParameters.description.trim();
+    const newTags =
+      jobParameters.tags.length === 0 ? job.tags : jobParameters.tags;
+    const newCompany =
+      jobParameters.company.trim() === ''
+        ? job.company
+        : jobParameters.company.trim();
+    const newLogoURL =
+      jobParameters.logoURL.trim() === ''
+        ? job.logo_url
+        : jobParameters.logoURL.trim();
 
-      if (newSalaryRange.trim() === '') {
-        newSalaryRange = job.salaryRange;
-      }
-
-      if (newDescription.trim() === '') {
-        newDescription = job.description;
-      }
-
-      if (newTags.length === 0) {
-        newTags = job.tags;
-      }
-
-      if (newCompany.trim() === '') {
-        newCompany = job.company;
-      }
-
-      if (newLogoURL.trim() === '') {
-        newLogoURL = job.logoURL;
-      }
-
-      const {rows} = await db.query(sql`
+    const {rows} = await db.query(sql`
         UPDATE jobs SET title = ${newTitle}, salary_range = ${newSalaryRange}, description = ${newDescription}, tags = ${newTags}, company = ${newCompany}, logo_url = ${newLogoURL} WHERE id = ${job.id}
-          RETURNING id, title, salary_range, description, create_at, tags, company, logo_url ;
+          RETURNING *;
         `);
-      return rows[0];
-    } catch (error) {
-      throw error;
-    }
+    return rows[0];
   }
 };
