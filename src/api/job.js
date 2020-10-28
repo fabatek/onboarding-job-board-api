@@ -25,6 +25,7 @@ router.post('/', async (request, response) => {
         .status(400)
         .json({message: 'All information must be provided!'});
     }
+
     const jobParameters = {
       title,
       salaryRange,

@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 chai.should();
 describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
   let accessToken = '';
-  let id = '';
+  const id = [];
   before(function (done) {
     const authentication = {
       email: 'admin@fabatechnology.com',
@@ -29,10 +29,24 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
         accessToken = response.body.token;
         done();
       });
+    const jobParameters = {
+      title: 'Test',
+      salaryRange: '$450-$700',
+      description: 'Work with customers and dev team',
+      tags: ['English', 'Communicate', 'Technical knowledge'],
+      company: 'Faba',
+      logoURL:
+        'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80'
+    };
+    id.push(uuidv4());
+    db.query(sql`
+        INSERT INTO jobs
+        VALUES (${id[0]}, ${jobParameters.title}, ${jobParameters.salaryRange}, ${jobParameters.description}, current_date, ${jobParameters.tags}, ${jobParameters.company}, ${jobParameters.logoURL})
+        `);
   });
 
   describe('/POST Post a new job', () => {
-    it('Return status 201 and the new job when create success! ', (done) => {
+    it('return status 201 and the new job information when create success! ', (done) => {
       const jobParameters = {
         title: 'Dev187',
         salaryRange: '$450-$700',
@@ -52,16 +66,16 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
           response.body.should.have
             .property('message')
             .eql('Create the job successful!');
-          id = response.body.job.id;
+          id.push(response.body.job.id);
           done();
         });
     });
   });
 
   describe('/PUT Update the job', () => {
-    it('Return status 200 and object job when id found', (done) => {
+    it('return status 200 and the latest job information when update successfully', (done) => {
       const jobParameters = {
-        id,
+        id: id[0],
         title: 'ChangeTitleToThisLine',
         salaryRange: '$450-$700',
         description: 'Work with customers and dev team',
@@ -99,7 +113,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
         });
     });
 
-    it('Return status 400 when id is not found!', (done) => {
+    it('return status 400 when job is not found!', (done) => {
       const jobParameters = {
         id: uuidv4(),
         title: 'ChangeTitleToThisLine',
@@ -124,13 +138,15 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
         });
     });
   });
-  after(async function () {
-    const {rows} = await db.query(sql`
-        DELETE FROM jobs WHERE id = ${id}
+  after(function () {
+    id.forEach(async function (value) {
+      const {rows} = await db.query(sql`
+        DELETE FROM jobs WHERE id = ${value} 
           RETURNING *;
         `);
-    if (rows) {
-      console.log('All test data was deleted!');
-    }
+      if (rows) {
+        console.log('Test data was deleted!');
+      }
+    });
   });
 });
