@@ -47,7 +47,7 @@ router.post('/', async (request, response) => {
       `createJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
     );
 
-    response.status(500).json();
+    response.status(500).json({message: 'Create new job failed!'});
   }
 });
 
@@ -79,7 +79,7 @@ router.put('/', async (request, response) => {
       `updateJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
     );
 
-    response.status(500).json();
+    response.status(500).json({message: 'Update the job failed!'});
   }
 });
 
@@ -109,7 +109,7 @@ router.delete('/', async (request, response) => {
       `deleteJob({ id: ${request.body.id} }) >> Error: ${error.stack}`
     );
 
-    response.status(500).json();
+    response.status(500).json({message: 'Delete the job failed!'});
   }
 });
 
