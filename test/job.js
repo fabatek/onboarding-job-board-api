@@ -11,6 +11,7 @@ const sql = require('sql-template-strings');
 const expect = chai.expect;
 
 chai.use(chaiHttp);
+chai.use(require('chai-json'));
 chai.should();
 describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
   let accessToken = '';
@@ -46,7 +47,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
   });
 
   describe('/POST Post a new job', () => {
-    it('return status 201 and the new job information when create success! ', (done) => {
+    it('return status 201 and the new job information when create successful! ', (done) => {
       const jobParameters = {
         title: 'Dev187',
         salaryRange: '$450-$700',
@@ -169,15 +170,33 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
         });
     });
   });
+
+  describe('/GET Get all of jobs', () => {
+    it('return status 200 and a list all of jobs in json file when get the jobs successful!', (done) => {
+      chai
+        .request(app())
+        .get('/api/jobs')
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.have
+            .property('message')
+            .eql('Get all jobs successful, list of jobs is below!');
+          expect(response.body.job).to.be.a.jsonObj();
+          done();
+        });
+    });
+  });
   after(function () {
     id.forEach(async function (value) {
       const {rows} = await db.query(sql`
         DELETE FROM jobs WHERE id = ${value} 
           RETURNING *;
         `);
-      if (rows) {
-        console.log('Test data was deleted!');
+      if (!rows) {
+        console.log('Delete test data failed!');
+        return false;
       }
     });
+    console.log('Test data was deleted!');
   });
 });
