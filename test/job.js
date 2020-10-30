@@ -73,7 +73,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
   });
 
   describe('/PUT Update the job', () => {
-    it('return status 200 and the latest job information when update successfully', (done) => {
+    it('return status 200 and the latest job information when update successfully!', (done) => {
       const jobParameters = {
         id: id[0],
         title: 'ChangeTitleToThisLine',
@@ -129,6 +129,37 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
         .put('/api/jobs')
         .set('Authorization', 'Bearer ' + accessToken)
         .send(jobParameters)
+        .end((err, response) => {
+          response.should.have.status(400);
+          response.body.should.have
+            .property('message')
+            .eql('There is no job with this id!');
+          done();
+        });
+    });
+  });
+
+  describe('/DELETE Delete the job', () => {
+    it('return status 200 when delete the job successful!', (done) => {
+      chai
+        .request(app())
+        .delete('/api/jobs')
+        .set('Authorization', 'Bearer ' + accessToken)
+        .send({id: id[0]})
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.have
+            .property('message')
+            .eql('Delete the job got the ID: ' + id[0] + ' successful!');
+          done();
+        });
+    });
+    it('return status 400 when the job is not found!', (done) => {
+      chai
+        .request(app())
+        .delete('/api/jobs')
+        .set('Authorization', 'Bearer ' + accessToken)
+        .send({id: uuidv4()})
         .end((err, response) => {
           response.should.have.status(400);
           response.body.should.have
