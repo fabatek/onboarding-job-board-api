@@ -155,6 +155,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
           done();
         });
     });
+
     it('return status 400 when the job is not found!', (done) => {
       chai
         .request(app())
@@ -181,7 +182,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
           response.body.should.have
             .property('message')
             .eql('Get all jobs successful, list of jobs is below!');
-          expect(response.body.job).to.be.a.jsonObj();
+          expect(response.body.jobs).to.be.a.jsonObj();
           done();
         });
     });
