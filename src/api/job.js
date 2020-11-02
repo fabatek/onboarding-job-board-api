@@ -46,8 +46,9 @@ router.post('/', async (request, response) => {
     console.error(
       `createJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
     );
-
-    response.status(500).json({message: 'Create new job failed!'});
+    response
+      .status(500)
+      .json({message: 'Create new job failed! ' + error.stack});
   }
 });
 
@@ -79,7 +80,9 @@ router.put('/', async (request, response) => {
       `updateJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
     );
 
-    response.status(500).json({message: 'Update the job failed!'});
+    response
+      .status(500)
+      .json({message: 'Update the job failed! ' + error.stack});
   }
 });
 
@@ -109,7 +112,9 @@ router.delete('/', async (request, response) => {
       `deleteJob({ id: ${request.body.id} }) >> Error: ${error.stack}`
     );
 
-    response.status(500).json({message: 'Delete the job failed!'});
+    response
+      .status(500)
+      .json({message: 'Delete the job failed! ' + error.stack});
   }
 });
 
@@ -121,13 +126,18 @@ router.get('/', async (request, response) => {
     }
 
     return response.status(200).json({
-      message: 'Get all jobs successful, list of jobs is below!',
+      message:
+        'Get all jobs successful, list of jobs is below! There is / are ' +
+        jobs.length +
+        ' in total!',
       jobs
     });
   } catch (error) {
     console.error(`getJob() >> Error: ${error.stack}`);
 
-    response.status(500).json({message: 'Get all of jobs failed!'});
+    response
+      .status(500)
+      .json({message: 'Get all of jobs failed! ' + error.stack});
   }
 });
 

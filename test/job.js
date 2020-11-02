@@ -181,8 +181,26 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
           response.should.have.status(200);
           response.body.should.have
             .property('message')
-            .eql('Get all jobs successful, list of jobs is below!');
-          expect(response.body.jobs).to.be.a.jsonObj();
+            .eql(
+              'Get all jobs successful, list of jobs is below! There is / are ' +
+                response.body.jobs.length +
+                ' in total!'
+            );
+          for (let i = 0; i < response.body.jobs.length; i++) {
+            expect(response.body.jobs[i]).to.be.a.jsonObj();
+            response.body.jobs[i].should.have.property('id');
+            response.body.jobs[i].should.have.property('title');
+            response.body.jobs[i].should.have.property('salary_range');
+            response.body.jobs[i].should.have.property('description');
+            response.body.jobs[i].should.have.property('create_at');
+            response.body.jobs[i].should.have.property('tags');
+            expect(Array.isArray(response.body.jobs[i].tags)).to.deep.equal(
+              true
+            );
+            response.body.jobs[i].should.have.property('company');
+            response.body.jobs[i].should.have.property('logo_url');
+          }
+
           done();
         });
     });
