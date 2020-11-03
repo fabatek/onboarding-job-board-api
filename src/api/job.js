@@ -141,4 +141,31 @@ router.get('/', async (request, response) => {
   }
 });
 
+router.get('/pagination', async (request, response) => {
+  try {
+    const offset = request.query.offset;
+    const limit = request.query.limit;
+    const result = await Job.paginationGet(offset, limit);
+    if (!result) {
+      return response
+        .status(400)
+        .json({message: 'Get list of jobs paginated failed!'});
+    }
+
+    return response.status(200).json({
+      message:
+        'Get list of jobs paginated successful, the list is below! There is / are ' +
+        result.jobs.length +
+        ' in total!',
+      result
+    });
+  } catch (error) {
+    console.error(`getJob() >> Error: ${error.stack}`);
+
+    response
+      .status(500)
+      .json({message: 'Get list of jobs paginated failed! ' + error.stack});
+  }
+});
+
 module.exports = router;
