@@ -65,11 +65,11 @@ module.exports = {
     return rows;
   },
   async paginationGet(offset, limit) {
-    if (!offset) offset = 0;
-    if (!limit) limit = 10;
+    const checkedOffset = offset || 0;
+    const checkedLimit = limit || 10;
     const {rows} = await db.query(sql`
-        SELECT * FROM jobs OFFSET ${offset} LIMIT ${limit}
+        SELECT * FROM jobs OFFSET ${checkedOffset} LIMIT ${checkedLimit}
         `);
-    return {jobs: rows, offset};
+    return {jobs: rows, checkedOffset};
   }
 };

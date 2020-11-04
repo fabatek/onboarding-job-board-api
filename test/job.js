@@ -223,7 +223,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
             );
           expect(response.body.result.jobs.length).to.deep.equal(limit);
           expect(
-            Number.parseInt(response.body.result.offset, 10)
+            Number.parseInt(response.body.result.checkedOffset, 10)
           ).to.deep.equal(offset);
           for (let i = 0; i < response.body.result.jobs.length; i++) {
             expect(response.body.result.jobs[i]).to.be.a.jsonObj();
@@ -258,7 +258,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
             );
           expect(response.body.result.jobs.length).to.deep.equal(10);
           expect(
-            Number.parseInt(response.body.result.offset, 10)
+            Number.parseInt(response.body.result.checkedOffset, 10)
           ).to.deep.equal(0);
           for (let i = 0; i < response.body.result.jobs.length; i++) {
             expect(response.body.result.jobs[i]).to.be.a.jsonObj();
@@ -294,7 +294,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
             );
           expect(response.body.result.jobs.length).to.deep.equal(limit);
           expect(
-            Number.parseInt(response.body.result.offset, 10)
+            Number.parseInt(response.body.result.checkedOffset, 10)
           ).to.deep.equal(0);
           for (let i = 0; i < response.body.result.jobs.length; i++) {
             expect(response.body.result.jobs[i]).to.be.a.jsonObj();
@@ -330,7 +330,7 @@ describe('/CREATE, UPDATE, DELETE AND GET JOB', () => {
             );
           expect(response.body.result.jobs.length).to.deep.equal(10);
           expect(
-            Number.parseInt(response.body.result.offset, 10)
+            Number.parseInt(response.body.result.checkedOffset, 10)
           ).to.deep.equal(offset);
           for (let i = 0; i < response.body.result.jobs.length; i++) {
             expect(response.body.result.jobs[i]).to.be.a.jsonObj();
