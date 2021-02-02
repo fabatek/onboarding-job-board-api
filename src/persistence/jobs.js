@@ -90,4 +90,10 @@ module.exports = {
       throw error;
     }
   },
+  async getJobDetails(id) {
+    const {rows} = await db.query(sql`
+    SELECT * FROM jobs WHERE id=${id} LIMIT 1;
+    `);
+    return rows[0];
+  }
 };

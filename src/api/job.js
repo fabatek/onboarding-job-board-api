@@ -67,7 +67,7 @@ router.delete('/delete', async (request, response) => {
     return response.status(201).json({message: 'Job deleted'});
   } catch (error) {
     console.error(
-      `deleteJob({ id: ${request.params.id} }) >> Error: ${error.stack}`
+      `deleteJob({ id: ${request.query.id} }) >> Error: ${error.stack}`
     );
 
     response.status(500).json();
@@ -102,6 +102,29 @@ router.get('/pagination', async (request, response) => {
   } catch (error) {
     console.error(
       `getJobsPagination() >> Error: ${error.stack}`
+    );
+
+    response.status(500).json();
+  }
+});
+router.get('/:id', async (request, response) => {
+  const {id} = request.params;
+  try {
+    if (!id) {
+      return response
+        .status(400)
+        .json({message: 'id not found'});
+    }
+
+    const job = await Job.getJobDetails(id);
+    if (!job) {
+      return response.status(400).json({message: 'get job details fail'});
+    }
+
+    return response.status(201).json(job);
+  } catch (error) {
+    console.error(
+      `getJobDetails({ id: ${request.params.id} }) >> Error: ${error.stack}`
     );
 
     response.status(500).json();
