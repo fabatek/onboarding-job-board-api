@@ -27,4 +27,29 @@ router.post('/', async (request, response) => {
   }
 });
 
+router.put('/update', async (request, response) => {
+  try {
+    const {id, title, salary_range, description, tags, company, company_logo} = request.body;
+    if (!id) {
+      return response
+        .status(400)
+        .json({message: 'id not found'});
+    }
+
+    const job = await Job.update(id, title, salary_range, description, tags, company, company_logo);
+    if (!job) {
+      return response.status(400).json({message: 'Job update fail'});
+    }
+
+    return response.status(201).json(job);
+  } catch (error) {
+    console.error(
+      `updateJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
+    );
+
+    response.status(500).json();
+  }
+});
+
+
 module.exports = router;

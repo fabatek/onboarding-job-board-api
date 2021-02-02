@@ -7,10 +7,9 @@ const User = require('../persistence/users');
 module.exports = {authenticate};
 
 async function authenticate(email, password) {
-  const hashedPassword = await bcrypt.hash(password, 10);
   // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
   const user = await User.find(email);
-  if (!user || !(await bcrypt.compare(hashedPassword, user.password))) {
+  if (!user || !(await bcrypt.compare(password, user.password))) {
     throw new Error('Username and password is incorrect');
   }
 

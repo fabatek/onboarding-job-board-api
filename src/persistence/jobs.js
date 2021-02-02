@@ -23,4 +23,24 @@ module.exports = {
       throw error;
     }
   },
+  async update(id, title, salary_range, description, tags, company, company_logo) {
+    try {
+
+      const {rows} = await db.query(sql`
+        UPDATE jobs SET title=${title}, salary_range=${salary_range}, description=${description}, tags=${tags}, company=${company}, company_logo=${company_logo}
+        WHERE id=${id}
+        RETURNING id;
+      `);
+
+      const [job] = rows;
+      return job;
+    } catch (error) {
+      if (error.constraint === 'jobs_title_key') {
+        return null;
+      }
+
+      throw error;
+    }
+  },
+  
 };
