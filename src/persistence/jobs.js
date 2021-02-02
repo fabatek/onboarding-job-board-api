@@ -42,5 +42,22 @@ module.exports = {
       throw error;
     }
   },
-  
+  async delete(id) {
+    try {
+
+      const {rows} = await db.query(sql`
+        DELETE FROM jobs WHERE id=${id}
+        RETURNING true
+      `);
+
+      const [job] = rows;
+      return job;
+    } catch (error) {
+      if (error.constraint === 'jobs_title_key') {
+        return null;
+      }
+
+      throw error;
+    }
+  },
 };

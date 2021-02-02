@@ -50,6 +50,28 @@ router.put('/update', async (request, response) => {
     response.status(500).json();
   }
 });
+router.delete('/delete', async (request, response) => {
+  try {
+    const {id} = request.query;
+    if (!id) {
+      return response
+        .status(400)
+        .json({message: 'id not found'});
+    }
 
+    const job = await Job.delete(id);
+    if (!job) {
+      return response.status(400).json({message: 'Job delete fail'});
+    }
+
+    return response.status(201).json({message: 'Job deleted'});
+  } catch (error) {
+    console.error(
+      `deleteJob({ id: ${request.params.id} }) >> Error: ${error.stack}`
+    );
+
+    response.status(500).json();
+  }
+});
 
 module.exports = router;
