@@ -65,6 +65,21 @@ module.exports = {
       const {rows} = await db.query(sql`
         SELECT * FROM jobs
       `);
+
+      return rows;
+    } catch (error) {
+      if (error.constraint === 'jobs_title_key') {
+        return null;
+      }
+
+      throw error;
+    }
+  },
+  async getJobsPagination(offset = 0, limit = 10) {
+    try {
+      const {rows} = await db.query(sql`
+        SELECT * FROM jobs LIMIT ${limit} OFFSET ${offset}
+      `);
       
       return rows;
     } catch (error) {
