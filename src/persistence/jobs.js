@@ -60,4 +60,19 @@ module.exports = {
       throw error;
     }
   },
+  async getAllJobs() {
+    try {
+      const {rows} = await db.query(sql`
+        SELECT * FROM jobs
+      `);
+      
+      return rows;
+    } catch (error) {
+      if (error.constraint === 'jobs_title_key') {
+        return null;
+      }
+
+      throw error;
+    }
+  },
 };

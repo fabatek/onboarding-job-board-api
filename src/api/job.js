@@ -73,5 +73,21 @@ router.delete('/delete', async (request, response) => {
     response.status(500).json();
   }
 });
+router.get('/', async (request, response) => {
+  try {
+    const jobs = await Job.getAllJobs();
+    if (!jobs) {
+      return response.status(400).json({message: 'get all jobs fail'});
+    }
+
+    return response.status(201).json(jobs);
+  } catch (error) {
+    console.error(
+      `getAllJobs() >> Error: ${error.stack}`
+    );
+
+    response.status(500).json();
+  }
+});
 
 module.exports = router;
