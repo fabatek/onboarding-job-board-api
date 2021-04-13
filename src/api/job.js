@@ -4,6 +4,71 @@ const Job = require('../persistence/jobs');
 const router = new Router();
 
 /**
+ *  Get all jobs
+ *  @return list jobs
+ */
+router.get('/all', async (request, response) => {
+    try {
+        const jobs = await Job.getAllJobs();
+        if (!jobs) {
+            return response.status(400).json({message: 'Unable to get jobs'});
+        }
+
+        return response.status(201).json(jobs);
+    } catch (error) {
+        console.error(
+            `getAllJobs >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+/**
+ *  Get jobs pagination
+ *  @params offset integer, limit integer
+ *  @return list jobs
+ */
+router.get('/', async (request, response) => {
+    const { offset, limit } = request.query;
+    const offsetChanged = parseInt(offset) > 0 ? parseInt(offset) + 1 : offset;
+    try {
+        const jobs = await Job.getJobs(offsetChanged, limit);
+        if (!jobs) {
+            return response.status(400).json({message: 'Unable to get jobs'});
+        }
+
+        return response.status(201).json(jobs);
+    } catch (error) {
+        console.error(
+            `getJobs >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+/**
+ *  Get details job
+ *  @params jobId integer
+ *  @return information's job
+ */
+router.get('/:id', async (request, response) => {
+    const {id: jobId} = request.params;
+    try {
+        const jobDetails = await Job.getDetailsJob(jobId);
+        if (!jobDetails) {
+            return response.status(400).json({message: 'Cannot find job details.'});
+        }
+
+        return response.status(201).json(jobDetails);
+    } catch (error) {
+        console.error(
+            `getDetailsJob({ id: ${request.params.id} }) >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+/**
  *  Create new job
  *  @param title string, salary_range string, description string,
     tags array of string, company_name string, company_logo string
@@ -32,4 +97,58 @@ router.post('/', async (request, response) => {
     }
 });
 
+/**
+ *  Update job
+ *  @param title string, salary_range string, description string,
+ tags array of string, company_name string, company_logo string
+ *  @return information job
+ */
+router.put('/:id', async (request, response) => {
+    try {
+        const jobId = request.params.id;
+        const infoJob = request.body;
+        if (!jobId) {
+            return response.status(400).json({message: 'Invalid request.'});
+        }
+
+        const job = await Job.update(jobId, infoJob);
+        if (!job) {
+            return response.status(400).json({message: 'Unable to update job.'});
+        }
+
+        return response.status(201).json(job);
+    } catch (error) {
+        console.error(
+            `createJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+/**
+ *  Delete job
+ *  @param jobId
+ *  @return id of job deleted
+ */
+router.delete('/:id', async (request, response) => {
+    try {
+        const jobId = request.params.id;
+        if (!jobId) {
+            return response.status(400).json({message: 'Invalid request.'});
+        }
+
+        const job = await Job.delete(jobId);
+        if (!job) {
+            return response.status(400).json({message: 'Unable to delete job.'});
+        }
+
+        return response.status(201).json(job);
+    } catch (error) {
+        console.error(
+            `deleteJob({ id: ${request.params.id} }) >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
 module.exports = router;
