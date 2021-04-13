@@ -60,5 +60,30 @@ router.put('/:id', async (request, response) => {
         response.status(500).json();
     }
 });
+/**
+ *  Delete job
+ *  @param jobId
+ *  @return id of job deleted
+ */
+router.delete('/:id', async (request, response) => {
+    try {
+        const jobId = request.params.id;
+        if (!jobId) {
+            return response.status(400).json({message: 'Invalid request.'});
+        }
 
+        const job = await Job.delete(jobId);
+        if (!job) {
+            return response.status(400).json({message: 'Unable to delete job.'});
+        }
+
+        return response.status(201).json(job);
+    } catch (error) {
+        console.error(
+            `deleteJob({ id: ${request.params.id} }) >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
 module.exports = router;
