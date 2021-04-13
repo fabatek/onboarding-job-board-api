@@ -24,6 +24,29 @@ router.get('/all', async (request, response) => {
     }
 });
 /**
+ *  Get jobs pagination
+ *  @params offset integer, limit integer
+ *  @return list jobs
+ */
+router.get('/', async (request, response) => {
+    const { offset, limit } = request.query;
+    const offsetChanged = parseInt(offset) > 0 ? parseInt(offset) + 1 : offset;
+    try {
+        const jobs = await Job.getJobs(offsetChanged, limit);
+        if (!jobs) {
+            return response.status(400).json({message: 'Unable to get jobs'});
+        }
+
+        return response.status(201).json(jobs);
+    } catch (error) {
+        console.error(
+            `getJobs >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+/**
  *  Create new job
  *  @param title string, salary_range string, description string,
     tags array of string, company_name string, company_logo string
