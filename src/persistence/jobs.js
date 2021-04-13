@@ -46,10 +46,11 @@ module.exports = {
       throw error;
     }
   },
-  async all() {
+  async get(limit, offset) {
     const {rows} = await db.query(sql`
-        SELECT * FROM jobs;
+        SELECT * FROM jobs LIMIT ${limit || 10} OFFSET ${offset || 0}
     `);
+    
     return rows;
   },
   async find(id) {
