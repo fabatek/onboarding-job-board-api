@@ -48,4 +48,31 @@ router.put('/:id', async (request, response) => {
   }
 });
 
+router.delete('/:id', async (request, response) => {
+  try {
+    const {id} = request.params;
+    if (!uuidValidate(id)) {
+      return response.status(400).json({message: 'Invalid job id'});
+    }
+
+    const job = await Job.find(id);
+    if (!job) {
+      return response.status(400).json({message: 'Job not found.'});
+    }
+
+    const deletedJob = await Job.delete(id);
+    if (!deletedJob) {
+      return response.status(500).json({message: 'Something error when deleting job.'});
+    }
+
+    return response.status(200).json();
+  } catch (error) {
+    console.error(
+        `deleteJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
+    );
+
+    response.status(500).json();
+  }
+});
+
 module.exports = router;
