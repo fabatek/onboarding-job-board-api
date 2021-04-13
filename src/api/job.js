@@ -47,6 +47,28 @@ router.get('/', async (request, response) => {
     }
 });
 /**
+ *  Get details job
+ *  @params jobId integer
+ *  @return information's job
+ */
+router.get('/:id', async (request, response) => {
+    const {id: jobId} = request.params;
+    try {
+        const jobDetails = await Job.getDetailsJob(jobId);
+        if (!jobDetails) {
+            return response.status(400).json({message: 'Cannot find job details.'});
+        }
+
+        return response.status(201).json(jobDetails);
+    } catch (error) {
+        console.error(
+            `getDetailsJob({ id: ${request.params.id} }) >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+/**
  *  Create new job
  *  @param title string, salary_range string, description string,
     tags array of string, company_name string, company_logo string

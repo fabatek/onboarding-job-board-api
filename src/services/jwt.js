@@ -12,6 +12,10 @@ function jwt() {
       '/api/health',
       '/api/jobs/all',
       {
+        url: /^\/api\/jobs\/.*/,
+        methods: ['GET']
+      },
+      {
         url: '/api/jobs',
         methods: ['GET']
       }

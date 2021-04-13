@@ -25,6 +25,19 @@ module.exports = {
         }
     },
 
+    async getDetailsJob(jobId) {
+        try {
+            const {rows} = await db.query(sql`
+            SELECT * FROM jobs 
+            WHERE id = ${jobId}
+            `);
+            const [job] = rows;
+            return job;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     async create(jobInfo) {
         const { title, salary_range, description, tags: arrayTags, company_name, company_logo } = jobInfo;
 
