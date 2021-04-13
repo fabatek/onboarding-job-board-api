@@ -46,6 +46,12 @@ module.exports = {
       throw error;
     }
   },
+  async all() {
+    const {rows} = await db.query(sql`
+        SELECT * FROM jobs;
+    `);
+    return rows;
+  },
   async find(id) {
     const {rows} = await db.query(sql`
     SELECT * FROM jobs WHERE id=${id} LIMIT 1;

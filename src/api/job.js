@@ -75,4 +75,21 @@ router.delete('/:id', async (request, response) => {
   }
 });
 
+router.get('/', async (request, response) => {
+  try {
+    const jobs = await Job.all();
+    if (!jobs) {
+      return response.status(500).json({message: 'Something error when listing job.'});
+    }
+
+    return response.status(201).json(jobs);
+  } catch (error) {
+    console.error(
+        `listJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
+    );
+
+    response.status(500).json();
+  }
+});
+
 module.exports = router;
