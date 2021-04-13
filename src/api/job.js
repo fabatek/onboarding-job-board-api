@@ -4,6 +4,26 @@ const Job = require('../persistence/jobs');
 const router = new Router();
 
 /**
+ *  Get all jobs
+ *  @return list jobs
+ */
+router.get('/all', async (request, response) => {
+    try {
+        const jobs = await Job.getAllJobs();
+        if (!jobs) {
+            return response.status(400).json({message: 'Unable to get jobs'});
+        }
+
+        return response.status(201).json(jobs);
+    } catch (error) {
+        console.error(
+            `getAllJobs >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+/**
  *  Create new job
  *  @param title string, salary_range string, description string,
     tags array of string, company_name string, company_logo string

@@ -3,6 +3,15 @@ const sql = require('sql-template-strings');
 const db = require('./db');
 
 module.exports = {
+    async getAllJobs() {
+        try {
+            const {rows:jobs} = await db.query(sql`SELECT * FROM jobs`);
+            return jobs;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     async create(jobInfo) {
         const { title, salary_range, description, tags: arrayTags, company_name, company_logo } = jobInfo;
 
