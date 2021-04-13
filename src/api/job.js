@@ -32,4 +32,33 @@ router.post('/', async (request, response) => {
     }
 });
 
+/**
+ *  Update job
+ *  @param title string, salary_range string, description string,
+ tags array of string, company_name string, company_logo string
+ *  @return information job
+ */
+router.put('/:id', async (request, response) => {
+    try {
+        const jobId = request.params.id;
+        const infoJob = request.body;
+        if (!jobId) {
+            return response.status(400).json({message: 'Invalid request.'});
+        }
+
+        const job = await Job.update(jobId, infoJob);
+        if (!job) {
+            return response.status(400).json({message: 'Unable to update job.'});
+        }
+
+        return response.status(201).json(job);
+    } catch (error) {
+        console.error(
+            `createJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+
 module.exports = router;
