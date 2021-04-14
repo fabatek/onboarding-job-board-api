@@ -1,5 +1,6 @@
 const {Router} = require('express');
 const Job = require('../persistence/jobs');
+const {validate: uuidValidate } = require('uuid');
 
 const router = new Router();
 
@@ -14,6 +15,33 @@ router.post('/', async (request, response) => {
   } catch (error) {
     console.error(
       `createJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
+    );
+
+    response.status(500).json();
+  }
+});
+
+router.put('/:id', async (request, response) => {
+  try {
+    const {id} = request.params;
+    if (!uuidValidate(id)) {
+      return response.status(400).json({message: 'Invalid job id'});
+    }
+
+    const job = await Job.find(id);
+    if (!job) {
+      return response.status(400).json({message: 'Job not found.'});
+    }
+
+    const updatedJob = await Job.update(id, request.body);
+    if (!updatedJob) {
+      return response.status(500).json({message: 'Something error when updating job.'});
+    }
+
+    return response.status(200).json(updatedJob);
+  } catch (error) {
+    console.error(
+        `updateJob({ title: ${request.body.title} }) >> Error: ${error.stack}`
     );
 
     response.status(500).json();

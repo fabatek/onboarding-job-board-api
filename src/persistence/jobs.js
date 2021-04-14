@@ -18,6 +18,21 @@ module.exports = {
       throw error;
     }
   },
+  async update(id, params) {
+    try {
+      const {rows} = await db.query(sql`
+        UPDATE jobs SET title=${params.title}, salary_range=${params.salary_range}, description=${params.description},
+        tags=${params.tags}, company=${params.company}, company_logo_url=${params.company_logo_url}
+        WHERE id=${id}
+        RETURNING *;
+      `);
+
+      const [job] = rows;
+      return job;
+    } catch (error) {
+      throw error;
+    }
+  },
   async find(id) {
     const {rows} = await db.query(sql`
     SELECT * FROM jobs WHERE id=${id} LIMIT 1;
