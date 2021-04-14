@@ -33,6 +33,19 @@ module.exports = {
       throw error;
     }
   },
+  async delete(id) {
+    try {
+      const {rows} = await db.query(sql`
+        DELETE FROM jobs WHERE id=${id}
+        RETURNING true
+    `);
+
+      const [job] = rows;
+      return job;
+    } catch (error) {
+      throw error;
+    }
+  },
   async find(id) {
     const {rows} = await db.query(sql`
     SELECT * FROM jobs WHERE id=${id} LIMIT 1;
