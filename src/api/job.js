@@ -77,7 +77,8 @@ router.delete('/:id', async (request, response) => {
 
 router.get('/', async (request, response) => {
   try {
-    const jobs = await Job.all();
+    const {limit, offset} = request.query;
+    const jobs = await Job.get(limit, offset);
     if (!jobs) {
       return response.status(500).json({message: 'Something error when listing job.'});
     }
