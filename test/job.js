@@ -43,4 +43,27 @@ describe('admin login account', () => {
         });
     });
   });
+
+  describe('admin can update a job', () => {
+    it('PUT /api/jobs/:id', (done) => {
+      const job = {
+        title: 'Seinor Frontend Developer 1000',
+        salary_range: '$10k - $80k',
+        description: 'We are looking for an ambitious to join our team 1000',
+        tags: ['Reactjs', 'Nodejs'],
+        company_name: 'Faba technology 1000',
+        company_logo:
+          'https://unsplash.com/photos/-zH2uIDz4dI'
+      };
+      chai.request('http://localhost:3000')
+        .put('/api/jobs/b9ff5411-c83b-4b63-9ce6-4e43e2d93810')
+        .set('Authorization', 'Bearer ' + accessToken)
+        .send(job)
+        .end((err, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+  });
+
 });
