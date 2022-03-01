@@ -37,5 +37,12 @@ module.exports = {
             if (error.constraint === 'jobs_title_key') return null;
             throw error;
         }
+    },
+
+    async find(id) {
+        const {rows} = await db.query(sql`
+        SELECT * FROM jobs WHERE id=${id} LIMIT 1;
+        `);
+        return rows[0];
     }
 }

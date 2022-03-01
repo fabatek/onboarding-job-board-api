@@ -32,6 +32,10 @@ router.put('/:id', async (request, response) => {
         if (!uuidValidate(id)) {
             return response.status(400).json({message: 'Invalid request.'});
         }
+        const jobCheck = await Job.find(id);
+        if (!jobCheck) {
+            return response.status(400).json({message: 'Job not found.'});
+        }
         const job = await Job.update(id, request.body);
         if (!job) {
             return response.status(400).json({message: 'Unable to update job.'});
