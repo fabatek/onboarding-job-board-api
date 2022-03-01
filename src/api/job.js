@@ -76,4 +76,21 @@ router.delete('/:id', async (request, response) => {
     }
 });
 
+router.get('/all', async (request, response) => {
+    try {
+        const jobs = await Job.getAllJobs();
+        if (!jobs) {
+            return response.status(400).json({message: 'Unable to get jobs'});
+        }
+
+        return response.status(201).json(jobs);
+    } catch (error) {
+        console.error(
+            `getAllJobs >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+
 module.exports = router;
