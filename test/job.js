@@ -3,11 +3,15 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const {app} = require('../server');
+const sql = require('sql-template-strings');
+const db = require('../src/persistence/db');
+const { v4: uuidv4 } = require('uuid');
 
 chai.use(chaiHttp);
 chai.should();
 describe('admin login account', () => {
   let accessToken = '';
+  let id = '';
   before(function (done) {
     const authentication = {
         email: 'admin@fabatechnology.com',
@@ -39,6 +43,7 @@ describe('admin login account', () => {
         .send(job)
         .end((err, response) => {
           response.should.have.status(201);
+          id = response.body.id;
           done();
         });
     });
@@ -56,7 +61,7 @@ describe('admin login account', () => {
           'https://unsplash.com/photos/-zH2uIDz4dI'
       };
       chai.request('http://localhost:3000')
-        .put('/api/jobs/b9ff5411-c83b-4b63-9ce6-4e43e2d93810')
+        .put('/api/jobs/' + id)
         .set('Authorization', 'Bearer ' + accessToken)
         .send(job)
         .end((err, response) => {
@@ -66,4 +71,16 @@ describe('admin login account', () => {
     });
   });
 
+  describe('admin can delete a job', () => {
+    it('PUT /api/jobs/:id', (done) => {
+      chai.request('http://localhost:3000')
+        .delete('/api/jobs/' + id)
+        .set('Authorization', 'Bearer ' + accessToken)
+        .send(id)
+        .end((err, response) => {
+          response.should.have.status(200);
+          done();
+        });
+    });
+  });
 });
