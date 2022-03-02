@@ -93,4 +93,22 @@ router.get('/all', async (request, response) => {
     }
 });
 
+router.get('/', async (request, response) => {
+    const { offset, limit } = request.query;
+    try {
+        const jobs = await Job.getJobs(offset, limit);
+        if (!jobs) {
+            return response.status(400).json({message: 'Unable to get jobs'});
+        }
+
+        return response.status(201).json(jobs);
+    } catch (error) {
+        console.error(
+            `getJobs >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+
 module.exports = router;
