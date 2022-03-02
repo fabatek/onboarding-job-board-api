@@ -44,5 +44,20 @@ module.exports = {
         SELECT * FROM jobs WHERE id=${id} LIMIT 1;
         `);
         return rows[0];
+    },
+    
+    async delete(jobId) {
+        try {
+            const {rows} = await db.query(sql`
+            DELETE FROM jobs
+            WHERE id = ${jobId}
+            RETURNING id;
+            `);
+            const [jobDeleted] = rows;
+            return jobDeleted;
+        } catch (error) {
+            if (error.constraint === 'jobs_title_key') return null;
+            throw error;
+        }
     }
 }

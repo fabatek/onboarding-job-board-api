@@ -51,4 +51,29 @@ router.put('/:id', async (request, response) => {
     }
 });
 
+router.delete('/:id', async (request, response) => {
+    try {
+        const id = request.params.id;
+        if (!uuidValidate(id)) {
+            return response.status(400).json({message: 'Invalid request.'});
+        }
+        const jobCheck = await Job.find(id);
+        if (!jobCheck) {
+            return response.status(400).json({message: 'Job not found.'});
+        }
+        const job = await Job.delete(id);
+        if (!job) {
+            return response.status(400).json({message: 'Unable to delete job.'});
+        }
+
+        return response.status(200).json(job);
+    } catch (error) {
+        console.error(
+            `deleteJob({ id: ${request.params.id} }) >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+
 module.exports = router;
