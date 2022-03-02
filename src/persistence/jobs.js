@@ -18,5 +18,31 @@ module.exports = {
             if (error.constraint === 'jobs_title_key') return null;
             throw error;
         }
+    },
+
+    async update(jobId, job) {
+        const { title, salary_range, description, tags, company_name, company_logo } = job;
+
+        try {
+            const {rows} = await db.query(sql`
+            UPDATE jobs
+            SET title = ${title}, salary_range = ${salary_range}, description = ${description}, 
+            tags = ${tags}, company_name = ${company_name}, company_logo = ${company_logo}
+            WHERE id = ${jobId}
+            RETURNING *;
+            `);
+            const [jobUpdated] = rows;
+            return jobUpdated;
+        } catch (error) {
+            if (error.constraint === 'jobs_title_key') return null;
+            throw error;
+        }
+    },
+
+    async find(id) {
+        const {rows} = await db.query(sql`
+        SELECT * FROM jobs WHERE id=${id} LIMIT 1;
+        `);
+        return rows[0];
     }
 }
