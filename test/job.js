@@ -49,6 +49,18 @@ describe('admin login account', () => {
     });
   });
 
+  describe('/GET Get all of jobs', () => {
+    it('GET /api/jobs/all', (done) => {
+      chai
+        .request('http://localhost:3000')
+        .get('/api/jobs/all')
+        .end((err, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+  });
+
   describe('admin can update a job', () => {
     it('PUT /api/jobs/:id', (done) => {
       const job = {
