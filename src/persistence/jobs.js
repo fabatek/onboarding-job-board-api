@@ -79,4 +79,15 @@ module.exports = {
             throw error;
         }
     },
+
+    async getDetailsJob(id) {
+        try {
+            const {rows} = await db.query(sql`
+            SELECT * FROM jobs WHERE id = ${id}`);
+            const [job] = rows;
+            return job;
+        } catch (error) {
+            throw error;
+        }
+    },
 }

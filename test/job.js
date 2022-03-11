@@ -61,6 +61,18 @@ describe('admin login account', () => {
     });
   });
 
+  describe('User can get jobs detail', () => {
+    it('GET /api/jobs/:id', (done) => {
+      chai.request('http://localhost:3000')
+        .get('/api/jobs/' + id)
+        .send(id)
+        .end((err, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+  });
+
   describe('/GET Get list of jobs pagination', () => {
     it('GET /api/jobs?limit=10&offset=0', (done) => {
       const offset = 0;

@@ -111,4 +111,29 @@ router.get('/', async (request, response) => {
     }
 });
 
+router.get('/:id', async (request, response) => {
+    const {id} = request.params;
+    try {
+        if (!uuidValidate(id)) {
+            return response.status(400).json({message: 'Invalid job id'});
+        }
+        const targetJob = await Job.find(id);
+        if (!targetJob) {
+            return response.status(500).json({message: 'Job not found.'});
+        }
+        const jobDetails = await Job.getDetailsJob(id);
+        if (!jobDetails) {
+            return response.status(400).json({message: 'Cannot find job details.'});
+        }
+
+        return response.status(201).json(jobDetails);
+    } catch (error) {
+        console.error(
+            `getDetailsJob({ id: ${request.params.id} }) >> Error: ${error.stack}`
+        );
+
+        response.status(500).json();
+    }
+});
+
 module.exports = router;
