@@ -61,6 +61,54 @@ describe('admin login account', () => {
     });
   });
 
+  describe('/GET Get list of jobs pagination', () => {
+    it('GET /api/jobs?limit=10&offset=0', (done) => {
+      const offset = 0;
+      const limit = 10;
+      chai
+        .request('http://localhost:3000')
+        .get('/api/jobs?limit=' + limit + '&offset=' + offset)
+        .end((err, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('GET /api/jobs?limit=3&offset=5', (done) => {
+      const offset = 5;
+      const limit = 3;
+      chai
+        .request('http://localhost:3000')
+        .get('/api/jobs?limit=' + limit + '&offset=' + offset)
+        .end((err, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('GET /api/jobs?limit=10', (done) => {
+      const limit = 10;
+      chai
+        .request('http://localhost:3000')
+        .get('/api/jobs?limit=' + limit)
+        .end((err, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('GET /api/jobs?offset=0', (done) => {
+      const offset = 5;
+      chai
+        .request('http://localhost:3000')
+        .get('/api/jobs?offset=' + offset)
+        .end((err, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+  });
+
   describe('admin can update a job', () => {
     it('PUT /api/jobs/:id', (done) => {
       const job = {

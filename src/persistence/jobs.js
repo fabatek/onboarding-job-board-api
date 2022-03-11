@@ -69,4 +69,14 @@ module.exports = {
             throw error;
         }
     },
+
+    async getJobs(offset = 0, limit = 10) {
+        try {
+            const {rows:jobs} = await db.query(sql`
+            SELECT * FROM jobs LIMIT ${limit} OFFSET ${offset}`);
+            return jobs;
+        } catch (error) {
+            throw error;
+        }
+    },
 }
